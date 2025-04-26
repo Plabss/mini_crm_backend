@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { db } from './utils/database';
 import authRouter from './routes/auth.routes';
+import clientRouter from './routes/client.routes';
 import { errorHandler } from './middlewares/error.middleware';
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRouter);
+app.use('/api/clients', clientRouter);
 
 // Error handling
 app.use(errorHandler);
