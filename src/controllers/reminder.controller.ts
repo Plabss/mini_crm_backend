@@ -56,6 +56,35 @@ export const createReminder = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const toggleReminder = async (req: AuthRequest, res: Response) => {
+  try {
+    // Fetch the reminder by ID and ensure it's owned by the user
+    const reminder = await prisma.reminder.findFirst({
+      where: {
+        id: req.params.reminder_id,
+        userId: req.user!.id, // Ensure the reminder belongs to the logged-in user
+      },
+    });
+
+    if (!reminder) {
+      return res.status(404).json({ error: 'Reminder not found' });
+    }
+
+    // Toggle the 'completed' status
+    const updatedReminder = await prisma.reminder.update({
+      where: { id: reminder.id },
+      data: {
+        completed: !reminder.completed, // Toggle the current 'completed' status
+      },
+    });
+
+    // Respond with the updated reminder
+    res.json(updatedReminder);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 export const getReminders = async (req: AuthRequest, res: Response) => {
   try {
     const { clientId, projectId, completed } = req.query;
@@ -225,3 +254,4 @@ export const deleteReminder = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+
