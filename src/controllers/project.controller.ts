@@ -53,9 +53,37 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const getProjectsByClient = async (req: AuthRequest, res: Response) => {
+  try {
+    console.log('Client ID:', req.params.client_id);
+    const projects = await prisma.project.findMany({
+      where: {
+        clientId: req.params.client_id,
+      },
+      include: {
+        client: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        deadline: 'asc',
+      },
+    });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 export const getProject = async (req: AuthRequest, res: Response) => {
   try {
+    console.log("Hiiiiiiiiiiiit");
+    console.log('Project ID:', req.params.project_id);
+    console.log('User ID:', req.user!.id);
     const project = await prisma.project.findFirst({
       where: {
         id: req.params.project_id,

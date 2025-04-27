@@ -16,7 +16,7 @@ export const auth = async (
 ) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-
+    console.log('Token:', token); // Debugging line
     if (!token) {
       throw new Error('Authentication required');
     }
@@ -26,10 +26,14 @@ export const auth = async (
       email: string;
     };
 
+    console.log('Decoded token:', decoded); // Debugging line
+
     const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
+      where: { email: decoded.email },
       select: { id: true, email: true }
     });
+
+    console.log('User found:', user); // Debugging line
 
     if (!user) {
       throw new Error('User not found');
