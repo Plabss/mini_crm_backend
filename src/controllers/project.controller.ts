@@ -25,7 +25,7 @@ export const createProject = async (req: AuthRequest, res: Response) => {
     });
     res.status(201).json(project);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: (error instanceof Error) ? error.message : 'An unknown error occurred' });
   }
 };
 
@@ -50,7 +50,7 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
     });
     res.json(projects);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: (error instanceof Error) ? error.message : 'An unknown error occurred' });
   }
 };
 export const getProjectsByClient = async (req: AuthRequest, res: Response) => {
@@ -75,7 +75,7 @@ export const getProjectsByClient = async (req: AuthRequest, res: Response) => {
     });
     res.json(projects);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: (error instanceof Error) ? error.message : 'An unknown error occurred' });
   }
 };
 
